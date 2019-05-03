@@ -28,7 +28,7 @@ namespace TransparentWall
                     MoveBackLayer = Resources.FindObjectsOfTypeAll<MoveBackWall>().First().gameObject.layer;
                 if (_beatmapObjectSpawnController != null)
                 {
-                    _beatmapObjectSpawnController.obstacleDiStartMovementEvent += HandleObstacleDiStartMovementEvent;
+                    _beatmapObjectSpawnController.obstacleDiStartMovementEvent += HandleObstacleDidStartMovementEvent;
                 }
 
                 setupCams();
@@ -43,7 +43,7 @@ namespace TransparentWall
         {
             if (_beatmapObjectSpawnController != null)
             {
-                _beatmapObjectSpawnController.obstacleDiStartMovementEvent -= HandleObstacleDiStartMovementEvent;
+                _beatmapObjectSpawnController.obstacleDiStartMovementEvent -= HandleObstacleDidStartMovementEvent;
             }
         }
         private void setupCams()
@@ -93,7 +93,7 @@ namespace TransparentWall
             }
         }
 
-        public virtual void HandleObstacleDiStartMovementEvent(BeatmapObjectSpawnController obstacleSpawnController, ObstacleController obstacleController)
+        public virtual void HandleObstacleDidStartMovementEvent(BeatmapObjectSpawnController obstacleSpawnController, ObstacleController obstacleController)
         {
             try
             {

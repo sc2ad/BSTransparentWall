@@ -3,7 +3,7 @@
 	"author": "Sc2ad",
 	"description": "A plugin that makes walls transparent.",
 	"gameVersion": "0.13.2",
-	"id": "TransparentWall",
+	"id": null,
 	"name": "Transparent Wall",
 	"version": "0.2.2",
 	"dependsOn": {
