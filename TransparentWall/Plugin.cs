@@ -77,7 +77,9 @@ namespace TransparentWall
         private void SceneTransitionDidFinish()
         {
             if (SceneManager.GetActiveScene().name == "GameCore")
+            {
                 new GameObject("TransparentWall").AddComponent<TransparentWall>();
+            }
         }
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)

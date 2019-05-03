@@ -5,7 +5,7 @@
 	"gameVersion": "0.13.2",
 	"id": "TransparentWall",
 	"name": "Transparent Wall",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"dependsOn": {
 		"BSIPA": "^3.12.14",
 		"CustomUI": "^1.5.4"
