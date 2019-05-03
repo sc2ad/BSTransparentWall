@@ -84,12 +84,12 @@ namespace TransparentWall
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
         {
-            
+
         }
 
         public void OnSceneUnloaded(Scene scene)
         {
-            
+
         }
 
         public void OnActiveSceneChanged(Scene prevScene, Scene nextScene)
@@ -105,12 +105,12 @@ namespace TransparentWall
 
         public void OnUpdate()
         {
-            
+
         }
 
         public void OnFixedUpdate()
         {
-            
+
         }
     }
 }

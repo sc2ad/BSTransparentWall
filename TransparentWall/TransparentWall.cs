@@ -41,6 +41,7 @@ namespace TransparentWall
 
         private void OnDestroy()
         {
+            Logger.log.Debug("Destroyed Transparent Wall Handler!");
             if (_beatmapObjectSpawnController != null)
             {
                 _beatmapObjectSpawnController.obstacleDiStartMovementEvent -= HandleObstacleDidStartMovementEvent;
