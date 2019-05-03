@@ -23,19 +23,19 @@ namespace TransparentWall
             try
             {
                 if (Resources.FindObjectsOfTypeAll<BeatmapObjectSpawnController>().Count() > 0)
-                    this._beatmapObjectSpawnController = Resources.FindObjectsOfTypeAll<BeatmapObjectSpawnController>().First();
+                    _beatmapObjectSpawnController = Resources.FindObjectsOfTypeAll<BeatmapObjectSpawnController>().First();
                 if (Resources.FindObjectsOfTypeAll<MoveBackWall>().Count() > 0)
                     MoveBackLayer = Resources.FindObjectsOfTypeAll<MoveBackWall>().First().gameObject.layer;
                 if (_beatmapObjectSpawnController != null)
                 {
-                    _beatmapObjectSpawnController.obstacleDiStartMovementEvent += this.HandleObstacleDiStartMovementEvent;
+                    _beatmapObjectSpawnController.obstacleDiStartMovementEvent += HandleObstacleDiStartMovementEvent;
                 }
 
                 setupCams();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message + "\n" + ex.StackTrace);
+                Logger.log.Error(ex);
             }
         }
 
@@ -43,7 +43,7 @@ namespace TransparentWall
         {
             if (_beatmapObjectSpawnController != null)
             {
-                _beatmapObjectSpawnController.obstacleDiStartMovementEvent -= this.HandleObstacleDiStartMovementEvent;
+                _beatmapObjectSpawnController.obstacleDiStartMovementEvent -= HandleObstacleDiStartMovementEvent;
             }
         }
         private void setupCams()
@@ -56,22 +56,26 @@ namespace TransparentWall
         {
             yield return new WaitForEndOfFrame();
 
-            StandardLevelSceneSetupDataSO levelSetup = Resources.FindObjectsOfTypeAll<StandardLevelSceneSetupDataSO>().FirstOrDefault();
+            StandardLevelScenesTransitionSetupDataSO manager = FindObjectsOfType<StandardLevelScenesTransitionSetupDataSO>().First(x => x != null);
+            GameScenesManagerSO.SceneInfoSceneSetupDataPair[] pairs = manager.sceneInfoSceneSetupDataPairs;
+            var pair = pairs.First(x => x.data != null);
+            GameplayCoreSceneSetupData setupData = (GameplayCoreSceneSetupData)pair.data;
 
             Camera mainCamera = Camera.main;
 
-            if (Plugin.IsHMDOn && levelSetup.gameplayCoreSetupData.gameplayModifiers.noFail)
+            if (Plugin.IsHMDOn && setupData.gameplayModifiers.noFail)
                 mainCamera.cullingMask &= ~(1 << WallLayer);
             else
                 mainCamera.cullingMask |= (1 << WallLayer);
 
             try
             {
-                LIV.SDK.Unity.LIV.FindObjectsOfType<LIV.SDK.Unity.LIV>().Where(x => livNames.Contains(x.name)).ToList().ForEach(l => {
+                FindObjectsOfType<LIV.SDK.Unity.LIV>().Where(x => livNames.Contains(x.name)).ToList().ForEach(l =>
+                {
                     if(Plugin.IsLIVCameraOn)
                         LayersToMask.ForEach(i => { l.SpectatorLayerMask &= ~(1 << i); });
                 });
-                GameObject.FindObjectsOfType<Camera>().Where(c => (c.name.ToLower().EndsWith(".cfg"))).ToList().ForEach(c => {
+                FindObjectsOfType<Camera>().Where(c => (c.name.ToLower().EndsWith(".cfg"))).ToList().ForEach(c => {
                     if (_excludedCams.Contains(c.name.ToLower()))
                         LayersToMask.ForEach(i => { c.cullingMask |= (1 << i); });
                     else
@@ -85,7 +89,7 @@ namespace TransparentWall
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[TransparentWall] {ex.Message}\n{ex.StackTrace}");
+                Logger.log.Error(ex);
             }
         }
 
@@ -103,7 +107,7 @@ namespace TransparentWall
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message + "\n" + ex.StackTrace);
+                Logger.log.Error(ex);
             }
         }
     }
