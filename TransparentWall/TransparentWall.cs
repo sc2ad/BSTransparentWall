@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -53,8 +54,9 @@ namespace TransparentWall
             StartCoroutine(setupCamerasCoroutine());
         }
 
-        private IEnumerator<WaitForEndOfFrame> setupCamerasCoroutine()
+        private IEnumerator setupCamerasCoroutine()
         {
+            Logger.log.Debug("Setting up cameras coroutine!");
             yield return new WaitForEndOfFrame();
 
             StandardLevelScenesTransitionSetupDataSO manager = FindObjectsOfType<StandardLevelScenesTransitionSetupDataSO>().First(x => x != null);
@@ -65,9 +67,14 @@ namespace TransparentWall
             Camera mainCamera = Camera.main;
 
             if (Plugin.IsHMDOn && setupData.gameplayModifiers.noFail)
+            {
                 mainCamera.cullingMask &= ~(1 << WallLayer);
+            }
             else
+            {
                 mainCamera.cullingMask |= (1 << WallLayer);
+            }
+            Logger.log.Debug("Setting culling mask to: " + mainCamera.cullingMask);
 
             try
             {
@@ -92,6 +99,7 @@ namespace TransparentWall
             {
                 Logger.log.Error(ex);
             }
+            yield break;
         }
 
         public virtual void HandleObstacleDidStartMovementEvent(BeatmapObjectSpawnController obstacleSpawnController, ObstacleController obstacleController)
@@ -102,6 +110,7 @@ namespace TransparentWall
                 StretchableCube _stretchableCoreOutside = ReflectionUtil.GetPrivateField<StretchableCube>(_stretchableObstacle, "_stretchableCore");
                 //MeshRenderer _meshRenderer = ReflectionUtil.GetPrivateField<MeshRenderer>(_stretchableCoreOutside, "_meshRenderer");
                 //MeshRenderer _meshRenderer2 = ReflectionUtil.GetPrivateField<MeshRenderer>(_stretchableCoreInside, "_meshRenderer");
+                Logger.log.Debug("Setting stretchableCore to layer to: " + WallLayer);
                 _stretchableCoreOutside.gameObject.layer = WallLayer;
             }
             catch (Exception ex)

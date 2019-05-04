@@ -78,6 +78,7 @@ namespace TransparentWall
         {
             if (SceneManager.GetActiveScene().name == "GameCore")
             {
+                Logger.log.Debug("Created Transparent Wall Handler!");
                 new GameObject("TransparentWall").AddComponent<TransparentWall>();
             }
         }
