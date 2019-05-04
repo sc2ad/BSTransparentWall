@@ -8,11 +8,10 @@ namespace TransparentWall
 {
     public class TransparentWall : MonoBehaviour
     {
-        public static int WallLayer = 25;
         public static int MoveBackLayer = 27;
         public static string LIVCam_Name = "MainCamera";
         private static List<string> _excludedCams = Plugin.ExcludedCams;
-        public static List<int> LayersToMask = new List<int> { WallLayer, MoveBackLayer };
+        public static List<int> LayersToMask = new List<int> { Plugin.WallLayer, MoveBackLayer };
         public static List<string> livNames = new List<string> { "MenuMainCamera", "MainCamera", "LIV Camera" };
 
         private BeatmapObjectSpawnController _beatmapObjectSpawnController;
@@ -78,11 +77,11 @@ namespace TransparentWall
 
             if (Plugin.IsHMDOn && setupData.gameplayModifiers.noFail)
             {
-                mainCamera.cullingMask &= ~(1 << WallLayer);
+                mainCamera.cullingMask &= ~(1 << Plugin.WallLayer);
             }
             else
             {
-                mainCamera.cullingMask |= (1 << WallLayer);
+                mainCamera.cullingMask |= (1 << Plugin.WallLayer);
             }
             Logger.log.Debug("Setting culling mask to: " + mainCamera.cullingMask);
 
@@ -145,12 +144,12 @@ namespace TransparentWall
                 Transform _obstacleCore = ReflectionUtil.GetPrivateField<Transform>(_stretchableObstacle, "_obstacleCore");
                 //MeshRenderer _meshRenderer = ReflectionUtil.GetPrivateField<MeshRenderer>(_stretchableCoreOutside, "_meshRenderer");
                 //MeshRenderer _meshRenderer2 = ReflectionUtil.GetPrivateField<MeshRenderer>(_stretchableCoreInside, "_meshRenderer");
-                Logger.log.Debug("Setting stretchableCore layer to: " + WallLayer + " from: " + _stretchableCore.gameObject.layer);
-                Logger.log.Debug("Setting obstacleCore layer to: " + WallLayer + " from: " + _obstacleCore.gameObject.layer);
+                Logger.log.Debug("Setting stretchableCore layer to: " + Plugin.WallLayer + " from: " + _stretchableCore.gameObject.layer);
+                Logger.log.Debug("Setting obstacleCore layer to: " + Plugin.WallLayer + " from: " + _obstacleCore.gameObject.layer);
                 Logger.log.Debug("ObstacleController has layer: " + obstacleController.gameObject.layer);
                 Logger.log.Debug("_stretchableObstacle has layer: " + _stretchableObstacle.gameObject.layer);
-                _stretchableCore.gameObject.layer = WallLayer;
-                _obstacleCore.gameObject.layer = WallLayer;
+                _stretchableCore.gameObject.layer = Plugin.WallLayer;
+                _obstacleCore.gameObject.layer = Plugin.WallLayer;
             }
             catch (Exception ex)
             {

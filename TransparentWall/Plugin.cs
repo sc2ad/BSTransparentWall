@@ -46,6 +46,12 @@ namespace TransparentWall
             set => config.Value.ExcludedCams = string.Join(",", value);
         }
 
+        public static int WallLayer
+        {
+            get => config.Value.WallLayer;
+            set => config.Value.WallLayer = value;
+        }
+
         internal static Ref<PluginConfig> config;
         internal static IConfigProvider configProvider;
 

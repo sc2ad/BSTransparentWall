@@ -14,5 +14,6 @@ namespace TransparentWall
         public bool CameraPlus = true;
         public bool LIV = true;
         public string ExcludedCams = "";
+        public int WallLayer = 25;
     }
 }
