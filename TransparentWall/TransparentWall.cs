@@ -20,15 +20,25 @@ namespace TransparentWall
         private void Start()
         {
             if (!Plugin.IsTranparentWall)
+            {
+                Logger.log.Debug("Transparent wall is disabled!");
                 return;
+            }
             try
             {
                 if (Resources.FindObjectsOfTypeAll<BeatmapObjectSpawnController>().Count() > 0)
+                {
+                    Logger.log.Debug("Found BeatmapObjectSpawnController!");
                     _beatmapObjectSpawnController = Resources.FindObjectsOfTypeAll<BeatmapObjectSpawnController>().First();
+                }
                 if (Resources.FindObjectsOfTypeAll<MoveBackWall>().Count() > 0)
+                {
                     MoveBackLayer = Resources.FindObjectsOfTypeAll<MoveBackWall>().First().gameObject.layer;
+                    Logger.log.Debug("Found MoveBackWall! Using MoveBackLayer=" + MoveBackLayer);
+                }
                 if (_beatmapObjectSpawnController != null)
                 {
+                    Logger.log.Debug("Setup obstacleDidStartMovementEvent hook!");
                     _beatmapObjectSpawnController.obstacleDiStartMovementEvent += HandleObstacleDidStartMovementEvent;
                 }
 
@@ -80,18 +90,42 @@ namespace TransparentWall
             {
                 FindObjectsOfType<LIV.SDK.Unity.LIV>().Where(x => livNames.Contains(x.name)).ToList().ForEach(l =>
                 {
-                    if(Plugin.IsLIVCameraOn)
-                        LayersToMask.ForEach(i => { l.SpectatorLayerMask &= ~(1 << i); });
+                    if (Plugin.IsLIVCameraOn)
+                    {
+                        LayersToMask.ForEach(i => 
+                        {
+                            Logger.log.Debug("Masking layer: " + i + " by converting: " + l.SpectatorLayerMask + " to: " + (l.SpectatorLayerMask & ~(1 << i)));
+                            l.SpectatorLayerMask &= ~(1 << i);
+                        });
+                    }
                 });
                 FindObjectsOfType<Camera>().Where(c => (c.name.ToLower().EndsWith(".cfg"))).ToList().ForEach(c => {
                     if (_excludedCams.Contains(c.name.ToLower()))
-                        LayersToMask.ForEach(i => { c.cullingMask |= (1 << i); });
+                    {
+                        LayersToMask.ForEach(i => 
+                        {
+                            Logger.log.Debug("Masking layer: " + i + " by converting: " + c.cullingMask + " to: " + (c.cullingMask | (1 << i)));
+                            c.cullingMask |= (1 << i);
+                        });
+                    }
                     else
                     {
                         if (Plugin.IsCameraPlusOn)
-                            LayersToMask.ForEach(i => { c.cullingMask &= ~(1 << i); });
+                        {
+                            LayersToMask.ForEach(i => 
+                            {
+                                Logger.log.Debug("Masking layer: " + i + " by converting: " + c.cullingMask + " to: " + (c.cullingMask & ~(1 << i)));
+                                c.cullingMask &= ~(1 << i);
+                            });
+                        }
                         else
-                            LayersToMask.ForEach(i => { c.cullingMask |= (1 << i); });
+                        {
+                            LayersToMask.ForEach(i => 
+                            {
+                                Logger.log.Debug("Masking layer: " + i + " by converting: " + c.cullingMask + " to: " + (c.cullingMask | (1 << i)));
+                                c.cullingMask |= (1 << i);
+                            });
+                        }
                     }
                 });
             }
@@ -107,11 +141,16 @@ namespace TransparentWall
             try
             {
                 StretchableObstacle _stretchableObstacle = ReflectionUtil.GetPrivateField<StretchableObstacle>(obstacleController, "_stretchableObstacle");
-                StretchableCube _stretchableCoreOutside = ReflectionUtil.GetPrivateField<StretchableCube>(_stretchableObstacle, "_stretchableCore");
+                StretchableCube _stretchableCore = ReflectionUtil.GetPrivateField<StretchableCube>(_stretchableObstacle, "_stretchableCore");
+                Transform _obstacleCore = ReflectionUtil.GetPrivateField<Transform>(_stretchableObstacle, "_obstacleCore");
                 //MeshRenderer _meshRenderer = ReflectionUtil.GetPrivateField<MeshRenderer>(_stretchableCoreOutside, "_meshRenderer");
                 //MeshRenderer _meshRenderer2 = ReflectionUtil.GetPrivateField<MeshRenderer>(_stretchableCoreInside, "_meshRenderer");
-                Logger.log.Debug("Setting stretchableCore to layer to: " + WallLayer);
-                _stretchableCoreOutside.gameObject.layer = WallLayer;
+                Logger.log.Debug("Setting stretchableCore layer to: " + WallLayer + " from: " + _stretchableCore.gameObject.layer);
+                Logger.log.Debug("Setting obstacleCore layer to: " + WallLayer + " from: " + _obstacleCore.gameObject.layer);
+                Logger.log.Debug("ObstacleController has layer: " + obstacleController.gameObject.layer);
+                Logger.log.Debug("_stretchableObstacle has layer: " + _stretchableObstacle.gameObject.layer);
+                _stretchableCore.gameObject.layer = WallLayer;
+                _obstacleCore.gameObject.layer = WallLayer;
             }
             catch (Exception ex)
             {
