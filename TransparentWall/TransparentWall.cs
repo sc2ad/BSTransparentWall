@@ -68,10 +68,7 @@ namespace TransparentWall
             Logger.log.Debug("Setting up cameras coroutine!");
             yield return new WaitForEndOfFrame();
 
-            StandardLevelScenesTransitionSetupDataSO manager = FindObjectsOfType<StandardLevelScenesTransitionSetupDataSO>().First(x => x != null);
-            GameScenesManagerSO.SceneInfoSceneSetupDataPair[] pairs = manager.sceneInfoSceneSetupDataPairs;
-            var pair = pairs.First(x => x.data != null);
-            GameplayCoreSceneSetupData setupData = (GameplayCoreSceneSetupData)pair.data;
+            var setupData = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData;
 
             Camera mainCamera = Camera.main;
 
